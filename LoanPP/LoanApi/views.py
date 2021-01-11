@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from rest_framework import viewsets
 from django.core import serializers
 from rest_framework.response import Response
@@ -18,37 +18,51 @@ import pandas as pd
 class ApprovalsView(viewsets.ModelViewSet):
 	queryset = approvals.objects.all()
 	serializer_class = approvalsSerializers
+
+def success(request):
+	
+	context = {'prediction':request.session['prediction']}
+	print(request.session['prediction'])
+	return render(request,template_name='LoanApi/success.html',context=context)
 def loanform(request):
+	
 	if request.method == 'POST':
 		form=ApprovalForm(request.POST)
 		if form.is_valid():
-			Firstname = form.cleaned_data['firstname']
-			Lastname = form.cleaned_data['lastname']
-			Dependents = form.cleaned_data['Dependents']
-			ApplicantIncome = form.cleaned_data['ApplicantIncome']
-			CoapplicantIncome = form.cleaned_data['CoapplicantIncome']
-			LoanAmount = form.cleaned_data['LoanAmount']
-			Loan_Amount_Term = form.cleaned_data['Loan_Amount_Term']
-			Credit_History = form.cleaned_data['Credit_History']
-			Gender = form.cleaned_data['Gender']
-			Married = form.cleaned_data['Married']
-			Education = form.cleaned_data['Education']
-			Self_Employed = form.cleaned_data['Self_Employed']
-			Property_Area = form.cleaned_data['Property_Area']
+			form_status=True
+			# Firstname = form.cleaned_data['firstname']
+			# Lastname = form.cleaned_data['lastname']
+			# Dependents = form.cleaned_data['Dependents']
+			# ApplicantIncome = form.cleaned_data['ApplicantIncome']
+			# CoapplicantIncome = form.cleaned_data['CoapplicantIncome']
+			# LoanAmount = form.cleaned_data['LoanAmount']
+			# Loan_Amount_Term = form.cleaned_data['Loan_Amount_Term']
+			# Credit_History = form.cleaned_data['Credit_History']
+			# Gender = form.cleaned_data['Gender']
+			# Married = form.cleaned_data['Married']
+			# Education = form.cleaned_data['Education']
+			# Self_Employed = form.cleaned_data['Self_Employed']
+			# Property_Area = form.cleaned_data['Property_Area']
 			myDict = (request.POST).dict()
 			df=pd.DataFrame(myDict, index=[0])
 			answer=predictor(df)
 			print(answer)
+			request.session['prediction'] =  'Application Status:' + str(answer)
 			#Xscalers=predictor(ohevalue(df))[1]
-			if int(df['LoanAmount'])<25000:
-				messages.success(request,'Application Status: {}'.format(answer))
+			if int(df['LoanAmount'])<6000000:
+				prediction = 'Application Status:' + str(answer)
 			else:
-				messages.success(request,'Invalid: Your Loan Request Exceeds ₹60,00,000 Limit')
-
+				error_entry= 'Invalid: Your Loan Request Exceeds ₹60,00,000 Limit'
+			context = {'form':form}
+			return redirect('success/')
+		
+	else:
+			
+		form=ApprovalForm()
+		context = {'form':form}
 	form=ApprovalForm()
-	return render(request,'LoanApi/form.html', {'form':form})
-
-
+	return render(request,'LoanApi/form.html',{'form':form} )
+	
 
 def preprocess(df):
 	print('Heypreprocess')
@@ -78,12 +92,12 @@ def predictor(unit):
 		model_predictor = joblib.load(r"C:\Users\rushi\Documents\GitHub\LoanPredictionPP\LoanPP\LoanApi\xgb.a")
 		X=preprocess(unit)
 		y_pred=model_predictor.predict(X)
-		print(y_pred)
+		#print(y_pred)
 
 		newdf=pd.DataFrame(y_pred, columns=['Status'])
 		newdf=newdf.replace({'Y':'Approved', 'N':'Rejected'})
 		
-		print(newdf['Status'][0])
+		#print(newdf['Status'][0])
 		
 		return(newdf['Status'][0])
 		#return (newdf.values[0][0],X[0])

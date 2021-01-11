@@ -9,7 +9,7 @@ class ApprovalForm(forms.Form):
 	CoapplicantIncome=forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Enter Co-Applicant Monthly Gross Income'}))
 	LoanAmount=forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Requested Loan Amount'}))
 	Loan_Amount_Term=forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Loan Term in Months'}))
-	#Credit_History=forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Last Credit Rating'}))
+	Credit_History=forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Last Credit Rating'}))
 	Credit_History=forms.ChoiceField(choices=[('0', 0),('1', 1),('2', 2),('3', 3)])
 	Gender=forms.ChoiceField(choices=[('Male', 'Male'),('Female', 'Female')])
 	Married=forms.ChoiceField(choices=[('Yes', 'Yes'),('No', 'No')])

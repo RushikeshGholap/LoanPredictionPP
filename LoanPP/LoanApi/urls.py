@@ -9,4 +9,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
    # path('status/', views.predictor),
     path('form/', views.loanform, name='LoanForm'),
+    path('form/success/', views.success, name='Success'),
+
 ] 
