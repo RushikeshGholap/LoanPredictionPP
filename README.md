@@ -34,5 +34,6 @@ Loan_Status	:(Target) Loan approved (Y/N)
 ### Acurracy on Subbmission : 78%
 
 ### Webapp created with Django 
-![Screenshot](./images/screenshot1.png)
-![Screenshot](./images/screenshot2.png)
+![Screenshot](./images/Screenshot (14).png)
+![Screenshot](./images/Screenshot (16).png)
+![Screenshot](./images/Screenshot (15).png)
