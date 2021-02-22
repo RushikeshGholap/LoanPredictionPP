@@ -31,7 +31,7 @@ Property_Area	:Urban/ Semi Urban/ Rural
 Loan_Status	:(Target) Loan approved (Y/N)
 
 ### Accuracy with XGB : 80%
-### Acurracy on Subbmission : 78%
+### Acurracy on Submission : 78%
 
 ### Webapp created with Django 
 ![Screenshot](./images/screenshot1.png)
